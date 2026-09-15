@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Customer {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String?
+  address   String?
+  createdAt DateTime   @default(now()) @map("created_at")
+  shipments Shipment[]
+
+  @@map("customers")
+}
+
+model Shipment {
+  id           Int             @id @default(autoincrement())
+  customerId   Int             @map("customer_id")
+  customer     Customer        @relation(fields: [customerId], references: [id])
+  destination  String
+  status       String          @default("confirmed")
+  promisedDate DateTime        @map("promised_date")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  events       ShipmentEvent[]
+
+  @@index([status])
+  @@index([promisedDate])
+  @@map("shipments")
+}
+
+model ShipmentEvent {
+  id         Int      @id @default(autoincrement())
+  shipmentId Int      @map("shipment_id")
+  shipment   Shipment @relation(fields: [shipmentId], references: [id])
+  status     String
+  note       String?
+  occurredAt DateTime @default(now()) @map("occurred_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([shipmentId])
+  @@map("shipment_events")
+}
