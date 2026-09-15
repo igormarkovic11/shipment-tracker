@@ -1,0 +1,52 @@
+<a routerLink="/" class="back-link">← Back to shipments</a>
+
+<div *ngIf="loading">Loading…</div>
+<div *ngIf="error" class="error-banner">{{ error }}</div>
+
+<div *ngIf="shipment && !loading">
+  <div class="detail-header">
+    <h1>Shipment #{{ shipment.id }}</h1>
+    <span class="status-badge" [class.late]="shipment.isLate">
+      {{ shipment.status }}
+      <span *ngIf="shipment.isLate"> · {{ shipment.daysLate }}d late</span>
+    </span>
+  </div>
+
+  <div class="info-grid">
+    <div>
+      <span class="label">Customer</span>
+      <span>{{ shipment.customer.name }}</span>
+    </div>
+    <div>
+      <span class="label">Destination</span>
+      <span>{{ shipment.destination }}</span>
+    </div>
+    <div>
+      <span class="label">Promised date</span>
+      <span>{{ shipment.promisedDate | date: "mediumDate" }}</span>
+    </div>
+  </div>
+
+  <div class="advance-section" *ngIf="nextStatuses.length > 0">
+    <span class="label">Advance status</span>
+    <div class="advance-buttons">
+      <button
+        *ngFor="let s of nextStatuses"
+        (click)="advance(s)"
+        [disabled]="advancing"
+      >
+        Mark as {{ s }}
+      </button>
+    </div>
+    <div *ngIf="advanceError" class="error-banner">{{ advanceError }}</div>
+  </div>
+
+  <h3>Timeline</h3>
+  <ul class="timeline">
+    <li *ngFor="let e of shipment.events">
+      <span class="timeline-status">{{ e.status }}</span>
+      <span class="timeline-date">{{ e.occurredAt | date: "medium" }}</span>
+      <span *ngIf="e.note" class="timeline-note">{{ e.note }}</span>
+    </li>
+  </ul>
+</div>
