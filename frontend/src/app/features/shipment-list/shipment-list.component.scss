@@ -1,0 +1,81 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.stats {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.stat-number {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stat-pill--late {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.stat-pill--late .stat-number,
+.stat-pill--late .stat-label {
+  color: #1a1206; // taman tekst na amber pozadini, dovoljan kontrast
+}
+
+.stat-pill--late.is-empty {
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+.stat-pill--late.is-empty .stat-number,
+.stat-pill--late.is-empty .stat-label {
+  color: var(--text-secondary);
+}
+
+tr.row-late td:first-child {
+  border-left: 2px solid var(--amber);
+}
+tr:not(.row-late) td:first-child {
+  border-left: 2px solid transparent;
+}
+
+.text-amber {
+  color: var(--amber);
+}
+
+.error-banner {
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 10px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+}

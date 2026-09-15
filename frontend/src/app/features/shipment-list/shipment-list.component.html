@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h1>Shipments</h1>
+  <div class="stats">
+    <div class="stat-pill">
+      <span class="stat-number">{{ shipments.length }}</span>
+      <span class="stat-label"> total</span>
+    </div>
+    <div class="stat-pill stat-pill--late" [class.is-empty]="lateCount === 0">
+      <span class="stat-number">{{ lateCount }}</span>
+      <span class="stat-label"> late</span>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">Loading…</div>
+<div *ngIf="error" class="error-banner">{{ error }}</div>
+
+<table *ngIf="!loading && !error">
+  <thead>
+    <tr>
+      <th>Customer</th>
+      <th>Destination</th>
+      <th>Status</th>
+      <th>Promised</th>
+      <th>Late</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let s of shipments" [class.row-late]="s.isLate">
+      <td class="mono" style="font-family: &quot;Inter&quot;, sans-serif">
+        {{ s.customerName }}
+      </td>
+      <td>{{ s.destination }}</td>
+      <td>{{ s.status }}</td>
+      <td>{{ s.promisedDate | date: "MMM d" }}</td>
+      <td [class.text-amber]="s.isLate">
+        {{ s.isLate ? s.daysLate + "d late" : "—" }}
+      </td>
+      <td><a [routerLink]="['/shipments', s.id]">View →</a></td>
+    </tr>
+  </tbody>
+</table>
