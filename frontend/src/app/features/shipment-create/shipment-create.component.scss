@@ -1,0 +1,73 @@
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+h1 {
+  font-size: 20px;
+  margin-bottom: 24px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 360px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+select,
+input {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+
+button[type="submit"] {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--amber);
+  background: var(--amber);
+  color: #1a1206;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: transparent;
+  color: var(--amber);
+}
+
+.error-banner {
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
