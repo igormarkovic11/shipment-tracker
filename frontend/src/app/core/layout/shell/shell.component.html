@@ -1,0 +1,18 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">Shipment Tracker</div>
+    <nav>
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Shipments</a
+      >
+      <a routerLink="/late" routerLinkActive="active">Late today</a>
+      <a routerLink="/shipments/new" routerLinkActive="active">New shipment</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
