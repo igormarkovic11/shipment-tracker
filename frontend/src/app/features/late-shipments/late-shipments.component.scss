@@ -1,0 +1,40 @@
+.page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+.subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.row-late td:first-child {
+  border-left: 2px solid var(--amber);
+}
+.text-amber {
+  color: var(--amber);
+}
+
+.empty-state {
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.error-banner {
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
