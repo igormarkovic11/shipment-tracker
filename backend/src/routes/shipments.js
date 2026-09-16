@@ -29,15 +29,18 @@ function computeLateInfo(shipment) {
   };
 }
 
-// GET /api/shipments?status=&late=&sort=
+// GET /api/shipments?status=&search=&late=&sortBy=&order=&page=&pageSize=
 router.get("/", async (req, res) => {
   try {
-    const { status, late, sort, search } = req.query;
+    const { status, late, search, sortBy, order = "asc" } = req.query;
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const pageSize = Math.min(
+      100,
+      Math.max(1, Number(req.query.pageSize) || 20),
+    );
 
     const where = {};
     if (status) where.status = status;
-
-    // pretraga po imenu customera ili destinaciji
     if (search) {
       where.OR = [
         { destination: { contains: search, mode: "insensitive" } },
@@ -45,12 +48,33 @@ router.get("/", async (req, res) => {
       ];
     }
 
-    const shipments = await prisma.shipment.findMany({
+    // Kolone po kojima baza može sortirati direktno
+    const dbSortMap = {
+      promisedDate: { promisedDate: order },
+      destination: { destination: order },
+      status: { status: order },
+      customer: { customer: { name: order } },
+    };
+
+    const needsInMemoryPass = late === "true" || sortBy === "daysLate";
+
+    const query = {
       where,
       include: { customer: true, events: true },
-    });
+      orderBy: dbSortMap[sortBy] || { promisedDate: "asc" },
+    };
 
-    let result = shipments.map((s) => {
+    if (!needsInMemoryPass) {
+      query.skip = (page - 1) * pageSize;
+      query.take = pageSize;
+    }
+
+    const [rows, totalInDb] = await Promise.all([
+      prisma.shipment.findMany(query),
+      prisma.shipment.count({ where }),
+    ]);
+
+    let result = rows.map((s) => {
       const { isLate, daysLate } = computeLateInfo(s);
       return {
         id: s.id,
@@ -63,16 +87,31 @@ router.get("/", async (req, res) => {
       };
     });
 
-    if (late === "true") result = result.filter((s) => s.isLate);
-    if (sort === "late_first") result.sort((a, b) => b.daysLate - a.daysLate);
+    let total = totalInDb;
 
-    res.json(result);
+    if (needsInMemoryPass) {
+      if (late === "true") result = result.filter((s) => s.isLate);
+      if (sortBy === "daysLate") {
+        result.sort((a, b) =>
+          order === "asc" ? a.daysLate - b.daysLate : b.daysLate - a.daysLate,
+        );
+      }
+      total = result.length;
+      result = result.slice((page - 1) * pageSize, page * pageSize);
+    }
+
+    res.json({
+      data: result,
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize) || 1,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch shipments" });
   }
 });
-
 // GET /api/shipments/:id
 router.get("/:id", async (req, res) => {
   try {

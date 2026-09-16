@@ -44,21 +44,31 @@
 <table *ngIf="!loading && !error">
   <thead>
     <tr>
-      <th>Customer</th>
-      <th>Destination</th>
-      <th>Status</th>
-      <th>Promised</th>
-      <th>Late</th>
+      <th class="sortable" (click)="sort('customer')">
+        Customer {{ sortIcon("customer") }}
+      </th>
+      <th class="sortable" (click)="sort('destination')">
+        Destination {{ sortIcon("destination") }}
+      </th>
+      <th class="sortable" (click)="sort('status')">
+        Status {{ sortIcon("status") }}
+      </th>
+      <th class="sortable" (click)="sort('promisedDate')">
+        Promised {{ sortIcon("promisedDate") }}
+      </th>
+      <th class="sortable" (click)="sort('daysLate')">
+        Late {{ sortIcon("daysLate") }}
+      </th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let s of shipments" [class.row-late]="s.isLate">
-      <td class="mono" style="font-family: &quot;Inter&quot;, sans-serif">
-        {{ s.customerName }}
-      </td>
+      <td class="customer-cell">{{ s.customerName }}</td>
       <td>{{ s.destination }}</td>
-      <td>{{ s.status }}</td>
+      <td [class.text-red]="['lost', 'damaged', 'refused'].includes(s.status)">
+        {{ s.status }}
+      </td>
       <td>{{ s.promisedDate | date: "MMM d" }}</td>
       <td [class.text-amber]="s.isLate">
         {{ s.isLate ? s.daysLate + "d late" : "—" }}
@@ -67,3 +77,13 @@
     </tr>
   </tbody>
 </table>
+
+<div class="pagination" *ngIf="!loading && totalPages > 1">
+  <button (click)="goToPage(page - 1)" [disabled]="page === 1">← Prev</button>
+  <span class="page-info"
+    >Page {{ page }} of {{ totalPages }} · {{ total }} shipments</span
+  >
+  <button (click)="goToPage(page + 1)" [disabled]="page === totalPages">
+    Next →
+  </button>
+</div>

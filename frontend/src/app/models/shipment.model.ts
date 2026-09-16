@@ -7,3 +7,11 @@ export interface Shipment {
   isLate: boolean;
   daysLate: number;
 }
+
+export interface PagedShipments {
+  data: Shipment[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}

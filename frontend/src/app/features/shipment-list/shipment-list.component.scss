@@ -136,3 +136,53 @@ tr:not(.row-late) td:first-child {
   padding: 40px 0;
   text-align: center;
 }
+
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+th.sortable:hover {
+  color: var(--text);
+}
+
+.customer-cell {
+  font-family: "Inter", sans-serif;
+}
+
+.text-red {
+  color: var(--red);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.pagination button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--text-secondary);
+}
+
+.pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+}

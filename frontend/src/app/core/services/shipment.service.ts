@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Shipment } from '../../models/shipment.model';
+import { PagedShipments } from '../../models/shipment.model';
 
 @Injectable({ providedIn: 'root' })
 export class ShipmentService {
@@ -12,9 +12,15 @@ export class ShipmentService {
   getAll(params?: {
     status?: string;
     late?: string;
-    sort?: string;
-  }): Observable<Shipment[]> {
-    return this.http.get<Shipment[]>(this.baseUrl, { params: params as any });
+    search?: string;
+    sortBy?: string;
+    order?: string;
+    page?: number;
+    pageSize?: number;
+  }): Observable<PagedShipments> {
+    return this.http.get<PagedShipments>(this.baseUrl, {
+      params: params as any,
+    });
   }
 
   getById(id: number): Observable<any> {
@@ -22,7 +28,10 @@ export class ShipmentService {
   }
 
   addEvent(id: number, status: string, note?: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${id}/events`, { status, note });
+    return this.http.post(`${this.baseUrl}/${id}/events`, {
+      status,
+      note,
+    });
   }
 
   create(data: {

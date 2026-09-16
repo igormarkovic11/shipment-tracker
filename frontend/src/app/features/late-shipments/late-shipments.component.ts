@@ -21,10 +21,10 @@ export class LateShipmentsComponent implements OnInit {
   ngOnInit() {
     // late=true + sort=late_first: najgore stanje na vrhu, tačno kako traži zadatak
     this.shipmentService
-      .getAll({ late: 'true', sort: 'late_first' })
+      .getAll({ late: 'true', sortBy: 'daysLate', order: 'desc' })
       .subscribe({
-        next: (data) => {
-          this.shipments = data;
+        next: (res) => {
+          this.shipments = res.data;
           this.loading = false;
         },
         error: () => {
