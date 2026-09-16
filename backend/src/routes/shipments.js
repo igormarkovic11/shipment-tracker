@@ -8,6 +8,10 @@ function computeLateInfo(shipment) {
   const isDelivered = shipment.status === "delivered";
   const promised = new Date(shipment.promisedDate);
 
+  if (["lost", "damaged", "refused"].includes(shipment.status)) {
+    return { isLate: false, daysLate: 0 };
+  }
+
   if (isDelivered) {
     const deliveredEvent = shipment.events?.find(
       (e) => e.status === "delivered",
