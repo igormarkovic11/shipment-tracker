@@ -146,6 +146,21 @@ router.post("/", async (req, res) => {
       });
     }
 
+    const promised = new Date(promisedDate);
+    if (isNaN(promised.getTime())) {
+      return res
+        .status(400)
+        .json({ error: "promisedDate is not a valid date" });
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (promised < today) {
+      return res
+        .status(400)
+        .json({ error: "promisedDate cannot be in the past" });
+    }
+
     const shipment = await prisma.shipment.create({
       data: {
         customerId: Number(customerId),

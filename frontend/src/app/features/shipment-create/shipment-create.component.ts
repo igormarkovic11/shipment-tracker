@@ -18,6 +18,8 @@ export class ShipmentCreateComponent implements OnInit {
   submitting = false;
   error = '';
 
+  today = new Date().toISOString().split('T')[0];
+
   form!: ReturnType<FormBuilder['group']>;
 
   constructor(
@@ -52,12 +54,11 @@ export class ShipmentCreateComponent implements OnInit {
     this.error = '';
 
     this.shipmentService.create(this.form.value as any).subscribe({
-      next: (shipment: any) => {
-        this.router.navigate(['/shipments', shipment.id]);
-      },
-      error: () => {
+      next: (shipment: any) =>
+        this.router.navigate(['/shipments', shipment.id]),
+      error: (err) => {
         this.submitting = false;
-        this.error = 'Failed to create shipment';
+        this.error = err.error?.error || 'Failed to create shipment';
       },
     });
   }
