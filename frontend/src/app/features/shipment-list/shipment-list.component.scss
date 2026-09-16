@@ -48,7 +48,7 @@ h1 {
 
 .stat-pill--late .stat-number,
 .stat-pill--late .stat-label {
-  color: #1a1206; // taman tekst na amber pozadini, dovoljan kontrast
+  color: #1a1206;
 }
 
 .stat-pill--late.is-empty {
@@ -78,4 +78,61 @@ tr:not(.row-late) td:first-child {
   padding: 10px 12px;
   font-size: 13px;
   border-radius: 4px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  max-width: 320px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+}
+
+.filters select {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+}
+
+.search-input:focus,
+.filters select:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+
+.clear-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  color: var(--text);
+  border-color: var(--text-secondary);
+}
+
+.empty-state {
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
 }

@@ -3,14 +3,12 @@ const router = express.Router();
 const prisma = require("../db");
 const { isValidTransition } = require("../utils/transitions");
 
-// Helper: da li je shipment "late" (Q1 — computed, ne stored)
 function computeLateInfo(shipment) {
   const now = new Date();
   const isDelivered = shipment.status === "delivered";
   const promised = new Date(shipment.promisedDate);
 
   if (isDelivered) {
-    // ako je dostavljen, "late" gleda kad je zadnji event bio 'delivered'
     const deliveredEvent = shipment.events?.find(
       (e) => e.status === "delivered",
     );
@@ -34,10 +32,18 @@ function computeLateInfo(shipment) {
 // GET /api/shipments?status=&late=&sort=
 router.get("/", async (req, res) => {
   try {
-    const { status, late, sort } = req.query;
+    const { status, late, sort, search } = req.query;
 
     const where = {};
     if (status) where.status = status;
+
+    // pretraga po imenu customera ili destinaciji
+    if (search) {
+      where.OR = [
+        { destination: { contains: search, mode: "insensitive" } },
+        { customer: { name: { contains: search, mode: "insensitive" } } },
+      ];
+    }
 
     const shipments = await prisma.shipment.findMany({
       where,
@@ -57,13 +63,8 @@ router.get("/", async (req, res) => {
       };
     });
 
-    if (late === "true") {
-      result = result.filter((s) => s.isLate);
-    }
-
-    if (sort === "late_first") {
-      result.sort((a, b) => b.daysLate - a.daysLate);
-    }
+    if (late === "true") result = result.filter((s) => s.isLate);
+    if (sort === "late_first") result.sort((a, b) => b.daysLate - a.daysLate);
 
     res.json(result);
   } catch (err) {
@@ -72,7 +73,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /api/shipments/:id — detalj sa punom istorijom
+// GET /api/shipments/:id
 router.get("/:id", async (req, res) => {
   try {
     const shipment = await prisma.shipment.findUnique({
@@ -95,17 +96,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST /api/shipments — kreiranje
+// POST /api/shipments
 router.post("/", async (req, res) => {
   try {
     const { customerId, destination, promisedDate } = req.body;
 
     if (!customerId || !destination || !promisedDate) {
-      return res
-        .status(400)
-        .json({
-          error: "customerId, destination and promisedDate are required",
-        });
+      return res.status(400).json({
+        error: "customerId, destination and promisedDate are required",
+      });
     }
 
     const shipment = await prisma.shipment.create({
@@ -117,7 +116,6 @@ router.post("/", async (req, res) => {
       },
     });
 
-    // prvi event odmah kreiran zajedno sa shipmentom
     await prisma.shipmentEvent.create({
       data: { shipmentId: shipment.id, status: "confirmed" },
     });
@@ -129,7 +127,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// POST /api/shipments/:id/events — srž Q2/Q4: server enforce-uje prelaze
+// POST /api/shipments/:id/events
 router.post("/:id/events", async (req, res) => {
   try {
     const shipmentId = Number(req.params.id);
