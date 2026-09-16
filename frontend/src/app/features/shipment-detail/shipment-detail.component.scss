@@ -54,12 +54,50 @@ h1 {
 
 .advance-section {
   margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.advance-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 560px;
+}
+
+.note-input {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 56px;
+  box-sizing: border-box;
+}
+
+.note-input:focus {
+  outline: none;
+  border-color: var(--amber);
 }
 
 .advance-buttons {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+  flex-wrap: wrap;
 }
 
 .advance-buttons button {

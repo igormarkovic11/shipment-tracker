@@ -34,18 +34,30 @@
   </div>
 
   <div class="advance-section" *ngIf="nextStatuses.length > 0">
-    <span class="label">Advance status</span>
-    <div class="advance-buttons">
-      <button
-        *ngFor="let s of nextStatuses"
-        (click)="advance(s)"
-        [disabled]="advancing"
-        [class.btn-critical]="['lost', 'damaged', 'refused'].includes(s)"
-        [class.btn-normal]="!['lost', 'damaged', 'refused'].includes(s)"
+    <span class="section-title">Advance status</span>
+
+    <div class="advance-body">
+      <textarea
+        class="note-input"
+        [(ngModel)]="eventNote"
+        placeholder="Note (optional) — reason, location, context…"
+        rows="2"
       >
-        Mark as {{ s }}
-      </button>
+      </textarea>
+
+      <div class="advance-buttons">
+        <button
+          *ngFor="let s of nextStatuses"
+          (click)="advance(s)"
+          [disabled]="advancing"
+          [class.btn-critical]="['lost', 'damaged', 'refused'].includes(s)"
+          [class.btn-normal]="!['lost', 'damaged', 'refused'].includes(s)"
+        >
+          Mark as {{ s }}
+        </button>
+      </div>
     </div>
+
     <div *ngIf="advanceError" class="error-banner">{{ advanceError }}</div>
   </div>
 

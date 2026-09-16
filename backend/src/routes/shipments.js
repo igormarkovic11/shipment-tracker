@@ -220,4 +220,36 @@ router.post("/:id/events", async (req, res) => {
   }
 });
 
+// POST /api/shipments/:id/notes — dodaj note bez promjene statusa
+router.post("/:id/notes", async (req, res) => {
+  try {
+    const shipmentId = Number(req.params.id);
+    const { note } = req.body;
+
+    if (!note?.trim()) {
+      return res.status(400).json({ error: "Note cannot be empty" });
+    }
+
+    const shipment = await prisma.shipment.findUnique({
+      where: { id: shipmentId },
+    });
+    if (!shipment) {
+      return res.status(404).json({ error: "Shipment not found" });
+    }
+
+    const event = await prisma.shipmentEvent.create({
+      data: {
+        shipmentId,
+        status: shipment.status, // isti status, ne mjenja se
+        note: note.trim(),
+      },
+    });
+
+    res.status(201).json(event);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to add note" });
+  }
+});
+
 module.exports = router;

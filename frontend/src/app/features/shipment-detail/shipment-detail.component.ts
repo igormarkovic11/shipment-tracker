@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ShipmentService } from '../../core/services/shipment.service';
 import { ALLOWED_TRANSITIONS } from '../../core/transitions';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shipment-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './shipment-detail.component.html',
   styleUrl: './shipment-detail.component.scss',
 })
@@ -17,6 +18,7 @@ export class ShipmentDetailComponent implements OnInit {
   error = '';
   advancing = false;
   advanceError = '';
+  eventNote = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -50,15 +52,18 @@ export class ShipmentDetailComponent implements OnInit {
   advance(status: string) {
     this.advancing = true;
     this.advanceError = '';
-    this.shipmentService.addEvent(this.shipment.id, status).subscribe({
-      next: () => {
-        this.advancing = false;
-        this.load(this.shipment.id); // reload da vidiš novi event u timeline-u
-      },
-      error: (err) => {
-        this.advancing = false;
-        this.advanceError = err.error?.error || 'Failed to update status';
-      },
-    });
+    this.shipmentService
+      .addEvent(this.shipment.id, status, this.eventNote || undefined)
+      .subscribe({
+        next: () => {
+          this.advancing = false;
+          this.eventNote = '';
+          this.load(this.shipment.id);
+        },
+        error: (err) => {
+          this.advancing = false;
+          this.advanceError = err.error?.error || 'Failed to update status';
+        },
+      });
   }
 }
