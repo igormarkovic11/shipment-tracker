@@ -33,7 +33,6 @@ function computeLateInfo(shipment) {
   };
 }
 
-// GET /api/shipments?status=&search=&late=&sortBy=&order=&page=&pageSize=
 router.get("/", async (req, res) => {
   try {
     const { status, late, search, sortBy, order = "asc" } = req.query;
@@ -52,7 +51,6 @@ router.get("/", async (req, res) => {
       ];
     }
 
-    // Kolone po kojima baza može sortirati direktno
     const dbSortMap = {
       promisedDate: { promisedDate: order },
       destination: { destination: order },
@@ -116,7 +114,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch shipments" });
   }
 });
-// GET /api/shipments/:id
+
 router.get("/:id", async (req, res) => {
   try {
     const shipment = await prisma.shipment.findUnique({
@@ -139,7 +137,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST /api/shipments
 router.post("/", async (req, res) => {
   try {
     const { customerId, destination, promisedDate } = req.body;
@@ -185,7 +182,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// POST /api/shipments/:id/events
 router.post("/:id/events", async (req, res) => {
   try {
     const shipmentId = Number(req.params.id);
@@ -217,38 +213,6 @@ router.post("/:id/events", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to record event" });
-  }
-});
-
-// POST /api/shipments/:id/notes — dodaj note bez promjene statusa
-router.post("/:id/notes", async (req, res) => {
-  try {
-    const shipmentId = Number(req.params.id);
-    const { note } = req.body;
-
-    if (!note?.trim()) {
-      return res.status(400).json({ error: "Note cannot be empty" });
-    }
-
-    const shipment = await prisma.shipment.findUnique({
-      where: { id: shipmentId },
-    });
-    if (!shipment) {
-      return res.status(404).json({ error: "Shipment not found" });
-    }
-
-    const event = await prisma.shipmentEvent.create({
-      data: {
-        shipmentId,
-        status: shipment.status, // isti status, ne mjenja se
-        note: note.trim(),
-      },
-    });
-
-    res.status(201).json(event);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to add note" });
   }
 });
 

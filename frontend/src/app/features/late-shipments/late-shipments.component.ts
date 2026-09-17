@@ -19,7 +19,6 @@ export class LateShipmentsComponent implements OnInit {
   constructor(private shipmentService: ShipmentService) {}
 
   ngOnInit() {
-    // late=true + sort=late_first: najgore stanje na vrhu, tačno kako traži zadatak
     this.shipmentService
       .getAll({ late: 'true', sortBy: 'daysLate', order: 'desc' })
       .subscribe({

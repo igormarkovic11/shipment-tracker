@@ -3,10 +3,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  // =========================
-  // CUSTOMERS
-  // =========================
-
   const customer1 = await prisma.customer.create({
     data: {
       name: "Marko Marković",
@@ -71,11 +67,6 @@ async function main() {
     },
   });
 
-  // =========================
-  // SHIPMENT 1
-  // Late shipment
-  // =========================
-
   const shipment1 = await prisma.shipment.create({
     data: {
       customerId: customer1.id,
@@ -110,11 +101,6 @@ async function main() {
     ],
   });
 
-  // =========================
-  // SHIPMENT 2
-  // Future shipment
-  // =========================
-
   const shipment2 = await prisma.shipment.create({
     data: {
       customerId: customer2.id,
@@ -131,11 +117,6 @@ async function main() {
       occurredAt: new Date("2026-09-14"),
     },
   });
-
-  // =========================
-  // SHIPMENT 3
-  // Picked up
-  // =========================
 
   const shipment3 = await prisma.shipment.create({
     data: {
@@ -160,11 +141,6 @@ async function main() {
       },
     ],
   });
-
-  // =========================
-  // SHIPMENT 4
-  // Departed
-  // =========================
 
   const shipment4 = await prisma.shipment.create({
     data: {
@@ -195,11 +171,6 @@ async function main() {
     ],
   });
 
-  // =========================
-  // SHIPMENT 5
-  // Confirmed, future date
-  // =========================
-
   const shipment5 = await prisma.shipment.create({
     data: {
       customerId: customer5.id,
@@ -216,11 +187,6 @@ async function main() {
       occurredAt: new Date("2026-09-15"),
     },
   });
-
-  // =========================
-  // SHIPMENT 6
-  // Picked up
-  // =========================
 
   const shipment6 = await prisma.shipment.create({
     data: {
@@ -245,11 +211,6 @@ async function main() {
       },
     ],
   });
-
-  // =========================
-  // SHIPMENT 7
-  // Out for delivery
-  // =========================
 
   const shipment7 = await prisma.shipment.create({
     data: {
@@ -285,11 +246,6 @@ async function main() {
     ],
   });
 
-  // =========================
-  // SHIPMENT 8
-  // Future shipment
-  // =========================
-
   const shipment8 = await prisma.shipment.create({
     data: {
       customerId: customer8.id,
@@ -306,11 +262,6 @@ async function main() {
       occurredAt: new Date("2026-09-15"),
     },
   });
-
-  // =========================
-  // SHIPMENT 9
-  // Another late shipment
-  // =========================
 
   const shipment9 = await prisma.shipment.create({
     data: {
@@ -340,11 +291,6 @@ async function main() {
       },
     ],
   });
-
-  // =========================
-  // SHIPMENT 10
-  // Out for delivery
-  // =========================
 
   const shipment10 = await prisma.shipment.create({
     data: {
